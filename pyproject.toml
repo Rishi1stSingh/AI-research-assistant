@@ -11,4 +11,5 @@ dependencies = [
     "langgraph",
     "langchain",
     "tavily-python",
+    "langchain-groq>=1.1.3",
 ]

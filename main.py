@@ -24,6 +24,9 @@ def load_runtime_secrets() -> None:
 # IMPORTANT: load secrets BEFORE importing graph
 load_runtime_secrets()
 
+st.write("GROQ secret exists:", "GROQ_API_KEY" in st.secrets)
+st.write("GROQ environment exists:", bool(os.getenv("GROQ_API_KEY")))
+
 from src.graph import run_research_workflow
 
 

@@ -1,9 +1,10 @@
 [project]
-name = "made-projects"
+name = "ai-research-assistant"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI Research Assistant"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12,<3.14"
+
 dependencies = [
     "python-dotenv",
     "streamlit",

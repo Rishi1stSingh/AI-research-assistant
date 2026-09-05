@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import streamlit as st
@@ -5,7 +6,21 @@ from dotenv import load_dotenv
 
 from src.graph import run_research_workflow
 
-load_dotenv(Path(__file__).resolve().parent / ".env")
+
+def load_runtime_secrets() -> None:
+    load_dotenv(Path(__file__).resolve().parent / ".env")
+
+    for key in ("GROQ_API_KEY", "TAVILY_API_KEY", "GROQ_MODEL"):
+        if os.getenv(key):
+            continue
+        try:
+            if key in st.secrets:
+                os.environ[key] = str(st.secrets[key])
+        except Exception:
+            pass
+
+
+load_runtime_secrets()
 
 
 st.set_page_config(page_title="ResearchSynth", page_icon="📚", layout="centered")

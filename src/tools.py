@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
@@ -13,6 +14,22 @@ from pydantic import BaseModel, Field
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(PROJECT_ROOT / ".env")
+
+
+def get_secret_value(key: str) -> str | None:
+    value = os.getenv(key)
+    if value:
+        return value.strip().strip("'\"")
+
+    try:
+        secret_value = st.secrets.get(key)
+    except Exception:
+        secret_value = None
+
+    if secret_value is None:
+        return None
+
+    return str(secret_value).strip().strip("'\"")
 
 
 class ResearchQuestions(BaseModel):
@@ -24,9 +41,9 @@ class EvidenceList(BaseModel):
 
 
 def get_api_keys() -> tuple[str, str, str]:
-    groq_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ_API_KEY ")
-    tavily_key = os.getenv("TAVILY_API_KEY") or os.getenv("TAVILY_API_KEY ")
-    model = os.getenv("GROQ_MODEL") or "openai/gpt-oss-20b"
+    groq_key = get_secret_value("GROQ_API_KEY")
+    tavily_key = get_secret_value("TAVILY_API_KEY")
+    model = get_secret_value("GROQ_MODEL") or "openai/gpt-oss-20b"
 
     if not groq_key:
         raise ValueError("Missing GROQ_API_KEY environment variable.")
